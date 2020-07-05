@@ -1,9 +1,9 @@
 package util
 
-import(
+import (
 	"fmt"
 )
 
-func Util(){
+func Util() {
 	fmt.Println("hello, this is my test function")
 }
