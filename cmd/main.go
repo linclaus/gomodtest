@@ -1,29 +1,40 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
+	"github.com/linclaus/gomodtest/metrics"
 	test "github.com/linclaus/gomodtest/test"
 	myutil "github.com/linclaus/gomodtest/util"
 	util "github.com/linclaus/goutil/util"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/sirupsen/logrus"
 	"rsc.io/quote"
 )
 
+var (
+	addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
+)
+
 func main() {
+	flag.Parse()
+
 	http.Handle("/metrics", promhttp.Handler())
-	logrus.Info("listen: 8080")
-	go http.ListenAndServe(":8080", nil)
+	logrus.Infof("Listen: %s", *addr)
+	go http.ListenAndServe(*addr, nil)
 
 	tick := time.NewTicker(30 * time.Second)
 	defer tick.Stop()
 	for {
 		select {
 		case <-tick.C:
-
+			metrics.MyMetricGauge.Inc()
+			metrics.MyMetricGaugeVec.WithLabelValues("l1", "l2").Inc()
+			metrics.MyMetricGaugeVec.WithLabelValues("l2", "l3").Inc()
 			fmt.Println("hello world")
 			util.Util()
 			myutil.Util()
