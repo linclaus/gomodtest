@@ -16,7 +16,7 @@ spec:
         app: gotest
     spec:
       containers:
-      - image: linclaus/gotest:latest
+      - image: docker.gridsumdissector.com/moebius/gotest
         name: gotest
         resources:
           limits:

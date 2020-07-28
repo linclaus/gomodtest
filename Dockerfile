@@ -20,12 +20,12 @@ COPY . .
 RUN CGO_ENABLED=0 \
     GOOS=linux \
     GOARCH=amd64 \
-    go build -mod=readonly --gcflags="-N -l" -o mantisd cmd/main.go
+    go build -mod=readonly --gcflags="-N -l" -o gotestd cmd/main.go
 
 FROM alpine:3.11
 
 WORKDIR /app
 
-COPY --from=builder /build/mantisd .
+COPY --from=builder /build/gotestd .
 
-CMD ["/app/mantisd"]
+CMD ["/app/gotestd"]
