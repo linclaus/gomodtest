@@ -12,11 +12,16 @@ spec:
       app: gotest
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
       labels:
         app: gotest
     spec:
       containers:
       - image: docker.gridsumdissector.com/moebius/gotest
+        imagePullPolicy: Always
         name: gotest
         resources:
           limits:
