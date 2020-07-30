@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gotest
+  name: gotest
+  namespace: moebius-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gotest
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      labels:
+        app: gotest
+    spec:
+      containers:
+      - image: docker.gridsumdissector.com/moebius/gotest
+        imagePullPolicy: Always
+        name: gotest
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      serviceAccountName: mantis-daemon
