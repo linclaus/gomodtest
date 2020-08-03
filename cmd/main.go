@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/linclaus/gomodtest/metrics"
+	"github.com/linclaus/gomodtest/pkg/model"
 	test "github.com/linclaus/gomodtest/test"
 	myutil "github.com/linclaus/gomodtest/util"
 	util "github.com/linclaus/goutil/util"
@@ -27,7 +28,7 @@ func main() {
 	logrus.Infof("Listen: %s", *addr)
 	go http.ListenAndServe(*addr, nil)
 
-	tick := time.NewTicker(30 * time.Second)
+	tick := time.NewTicker(5 * time.Second)
 	defer tick.Stop()
 	for {
 		select {
@@ -40,6 +41,7 @@ func main() {
 			myutil.Util()
 			fmt.Println(quote.Hello())
 			test.Test()
+			model.TestType()
 
 		}
 	}
