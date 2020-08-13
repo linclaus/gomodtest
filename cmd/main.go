@@ -22,6 +22,7 @@ var (
 )
 
 func main() {
+	test.TestExtend()
 	flag.Parse()
 
 	http.Handle("/metrics", promhttp.Handler())
