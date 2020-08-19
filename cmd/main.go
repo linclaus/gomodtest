@@ -22,6 +22,7 @@ var (
 )
 
 func main() {
+	test.TestStructTag()
 	test.TestExtend()
 	flag.Parse()
 
