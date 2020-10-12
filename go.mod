@@ -9,5 +9,6 @@ require (
 	github.com/urfave/cli/v2 v2.2.0
 	gorm.io/driver/sqlite v1.1.3
 	gorm.io/gorm v1.20.2
+	gopkg.in/yaml.v2 v2.2.5
 	rsc.io/quote v1.5.2
 )

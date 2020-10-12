@@ -43,6 +43,7 @@ func main() {
 
 func do() {
 	test.TestOrm()
+	test.TestStructTag()
 	test.TestExtend()
 	flag.Parse()
 
