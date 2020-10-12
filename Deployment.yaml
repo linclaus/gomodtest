@@ -4,7 +4,7 @@ metadata:
   labels:
     app: gotest
   name: gotest
-  namespace: moebius-system
+  namespace: lzq
 spec:
   replicas: 1
   selector:
@@ -30,4 +30,3 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-      serviceAccountName: mantis-daemon
