@@ -28,6 +28,13 @@ func main() {
 	app := &cli.App{
 		Name:  "boom",
 		Usage: "make an explosive entrance",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "lang",
+				Value: "english",
+				Usage: "language for greeting",
+			},
+		},
 		Action: func(c *cli.Context) error {
 			fmt.Println("boom! I say!")
 			do()
