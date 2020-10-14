@@ -30,14 +30,17 @@ func main() {
 		Usage: "make an explosive entrance",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "lang",
-				Value: "english",
-				Usage: "language for greeting",
+				Name:     "lang",
+				Value:    "english",
+				Usage:    "language for greeting",
+				EnvVars:  []string{"MY_LANG"},
+				FilePath: "config.yaml",
 			},
 		},
 		Action: func(c *cli.Context) error {
 			fmt.Println("boom! I say!")
-			do()
+			fmt.Println(c.String("lang"))
+			// do()
 			return nil
 		},
 	}
