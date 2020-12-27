@@ -33,7 +33,7 @@ func (b *Barrier) addOne() (barrierNum int) {
 func (b *Barrier) BarrierWait() {
 	barrierNum := b.addOne()
 	if b.currentCnt == b.threshold {
-		// Broacast the ready signal
+		// Broadcast the ready signal
 		close(b.finishedSignalChan)
 	} else {
 		// Blocked until the ready signal
