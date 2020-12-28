@@ -3,56 +3,58 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
+	"sync/atomic"
 )
 
 type Barrier struct {
-	currentCnt         int
-	threshold          int
+	currentCnt         int32
+	threshold          int32
 	finishedSignalChan chan struct{}
 	lock               sync.Mutex
 }
 
-func NewBarrier(threshold int) *Barrier {
+func NewBarrier(threshold int32) (*Barrier, error) {
+	if threshold < 0 {
+		return nil, fmt.Errorf("Create barrier error because of negative threshold: %d", threshold)
+	}
 	return &Barrier{
 		currentCnt:         0,
 		threshold:          threshold,
 		finishedSignalChan: make(chan struct{}),
-	}
-}
-
-func (b *Barrier) addOne() (barrierNum int) {
-	b.lock.Lock()
-	defer b.lock.Unlock()
-	barrierNum = b.currentCnt
-	fmt.Printf("Barrier:%d added\n", barrierNum)
-	b.currentCnt++
-	return
+	}, nil
 }
 
 func (b *Barrier) BarrierWait() {
-	barrierNum := b.addOne()
-	if b.currentCnt == b.threshold {
+	barrierNum := atomic.AddInt32(&b.currentCnt, 1)
+	fmt.Printf("Barrier:%d added\n", barrierNum)
+	switch {
+	case barrierNum == b.threshold:
 		// Broadcast the ready signal
 		close(b.finishedSignalChan)
-	} else {
+	case barrierNum < b.threshold:
 		// Blocked until the ready signal
 		<-b.finishedSignalChan
+	default:
+		// Other cases and barrier will be opened
 	}
 	fmt.Printf("Barrier:%d finished\n", barrierNum)
 }
 
 func main() {
 	var wg sync.WaitGroup
-	br := NewBarrier(5)
-	for i := 0; i < 10; i++ {
+	threshold := 5
+	br, err := NewBarrier(int32(threshold))
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	wg.Add(threshold)
+	for i := 0; i < threshold; i++ {
 		go func() {
-			wg.Add(1)
 			defer wg.Done()
 			br.BarrierWait()
 		}()
 	}
 	wg.Wait()
-	time.Sleep(1 * time.Second)
 	fmt.Println("Main ended")
 }
