@@ -26,16 +26,17 @@ func NewBarrier(threshold int32) (*Barrier, error) {
 
 func (b *Barrier) BarrierWait() {
 	barrierNum := atomic.AddInt32(&b.currentCnt, 1)
+	if barrierNum > b.threshold {
+		// Other cases and barrier will do nothing
+		return
+	}
 	fmt.Printf("Barrier:%d added\n", barrierNum)
-	switch {
-	case barrierNum == b.threshold:
+	if barrierNum == b.threshold {
 		// Broadcast the ready signal
 		close(b.finishedSignalChan)
-	case barrierNum < b.threshold:
+	} else {
 		// Blocked until the ready signal
 		<-b.finishedSignalChan
-	default:
-		// Other cases and barrier will be opened
 	}
 	fmt.Printf("Barrier:%d finished\n", barrierNum)
 }
