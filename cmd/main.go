@@ -12,7 +12,6 @@ import (
 
 	"github.com/linclaus/gomodtest/metrics"
 	"github.com/linclaus/gomodtest/pkg/model"
-	test "github.com/linclaus/gomodtest/test"
 	myutil "github.com/linclaus/gomodtest/util"
 	util "github.com/linclaus/goutil/util"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -52,9 +51,6 @@ func main() {
 }
 
 func do() {
-	test.TestOrm()
-	test.TestStructTag()
-	test.TestExtend()
 	flag.Parse()
 
 	http.Handle("/metrics", promhttp.Handler())
@@ -73,7 +69,6 @@ func do() {
 			util.Util()
 			myutil.Util()
 			fmt.Println(quote.Hello())
-			test.Test()
 			model.TestType()
 
 		}

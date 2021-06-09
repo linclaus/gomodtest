@@ -1,6 +1,8 @@
 package test
 
 import (
+	"testing"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -11,7 +13,7 @@ type Product struct {
 	Price uint
 }
 
-func TestOrm() {
+func TestOrm(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
