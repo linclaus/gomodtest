@@ -2,7 +2,6 @@ package test
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"net/rpc"
 	"testing"
@@ -10,41 +9,46 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func TestClient(t *testing.T) {
+func TestRPC(t *testing.T) {
+	go serverTest()
+	clientTest()
+}
+
+func clientTest() {
 	var args = Args{A: 32, B: 14}
 	var result = Result{}
 	logrus.Info("test")
 
 	var client, err = rpc.DialHTTP("tcp", "127.0.0.1:9090")
 	if err != nil {
-		fmt.Printf("connect rpc server failed, err:%v", err)
+		logrus.Infof("connect rpc server failed, err:%v", err)
 	}
 
 	err = client.Call("MathService.Divide", args, &result)
 	if err != nil {
-		fmt.Printf("call math service failed, err:%v", err)
+		logrus.Infof("call math service failed, err:%v", err)
 	}
-	fmt.Printf("call RPC server success, result:%f", result.Value)
+	logrus.Infof("call RPC server success, result:%f", result.Value)
 }
 
-func TestServer(t *testing.T) {
+func serverTest() {
 	var ms = new(MathService)
 	// 注册 RPC 服务
 	err := rpc.Register(ms)
 	if err != nil {
-		fmt.Printf("rpc server register faild, err:%s", err)
+		logrus.Infof("rpc server register faild, err:%s", err)
 	}
 	// 将 RPC 服务绑定到 HTTP 服务中去
 	rpc.HandleHTTP()
 
-	fmt.Printf("server start ....")
+	logrus.Infof("server start ....")
 	err = http.ListenAndServe(":9090", nil)
 
 	if err != nil {
-		fmt.Printf("listen and server is failed, err:%v\n", err)
+		logrus.Infof("listen and server is failed, err:%v\n", err)
 	}
 
-	fmt.Printf("server stop ....")
+	logrus.Infof("server stop ....")
 }
 
 type Args struct {
