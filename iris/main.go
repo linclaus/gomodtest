@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -22,6 +23,8 @@ func main() {
 		ctx.Writef("User ID: %d", userID)
 	})
 	app.Handle("GET", "/ping", func(ctx iris.Context) {
+		params := ctx.URLParams()
+		logrus.Info(params["id"])
 		ctx.JSON(iris.Map{"message": "pong"})
 	})
 
