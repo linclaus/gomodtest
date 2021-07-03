@@ -22,9 +22,11 @@ func main() {
 		userID, _ := ctx.Params().GetUint64("id")
 		ctx.Writef("User ID: %d", userID)
 	})
-	app.Handle("GET", "/ping", func(ctx iris.Context) {
+	app.Handle("GET", "/ping/{id}", func(ctx iris.Context) {
+		p := ctx.Params().Get("id")
+		logrus.Info(p)
 		params := ctx.URLParams()
-		logrus.Info(params["id"])
+		logrus.Info(params)
 		ctx.JSON(iris.Map{"message": "pong"})
 	})
 
