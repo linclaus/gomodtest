@@ -2,8 +2,14 @@ package main
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/sessions"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	cookieNameForSessionID = "mycookiesessionnameid"
+	sess                   = sessions.New(sessions.Config{Cookie: cookieNameForSessionID})
 )
 
 func main() {
@@ -23,10 +29,21 @@ func main() {
 		ctx.Writef("User ID: %d", userID)
 	})
 	app.Handle("GET", "/ping/{id}", func(ctx iris.Context) {
+		session := sess.Start(ctx)
+		smid := session.GetString("serverMessageId")
+		logrus.Infof("serverMessageId: %s", smid)
+		session.Set("serverMessageId", "123456")
+		cId := ctx.GetCookie("cookieId")
+		logrus.Infof("cookieId: %s", cId)
+		sId := ctx.GetCookie(cookieNameForSessionID)
+		logrus.Infof("sessionId: %s", sId)
+		ctx.SetCookieKV("cookieId", "123")
+
 		p := ctx.Params().Get("id")
-		logrus.Info(p)
+		logrus.Infof("params Id: %s", p)
 		params := ctx.URLParams()
 		logrus.Info(params)
+
 		ctx.JSON(iris.Map{"message": "pong"})
 	})
 

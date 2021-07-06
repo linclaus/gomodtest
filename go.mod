@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/fsnotify/fsnotify v1.4.7
+	github.com/kataras/iris v0.0.2
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/linclaus/goutil v1.0.0
 	github.com/prometheus/client_golang v1.7.1
